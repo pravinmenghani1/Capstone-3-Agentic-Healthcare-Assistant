@@ -1,0 +1,15 @@
+streamlit
+langchain-ollama
+langchain_community
+langchain-openai
+pdf2image
+pypdf
+openpyxl
+faiss-cpu
+sentence_transformers
+xmltodict
+langgraph
+plotly
+pandas
+numpy
+PyPDF2
