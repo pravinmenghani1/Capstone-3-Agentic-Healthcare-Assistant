@@ -75,6 +75,47 @@
             </div>
         </div>
 
+        <!-- NEW: High-Level Overview -->
+        <div class="slide">
+            <h1>📚 Learning Journey Overview</h1>
+            
+            <h3>🎯 Three Main Phases</h3>
+            
+            <div class="step">
+                <h3>Phase 1: Understanding the Concepts (Week 1)</h3>
+                <ul>
+                    <li><strong>What is Agentic AI?</strong> Systems that can plan, decide, and act autonomously</li>
+                    <li><strong>What is RAG?</strong> Combining LLMs with external knowledge retrieval</li>
+                    <li><strong>Why Healthcare?</strong> Complex workflows that benefit from automation</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>Phase 2: Building the System (Weeks 2-4)</h3>
+                <ul>
+                    <li><strong>Design agents</strong> that handle specific tasks (appointments, records, search)</li>
+                    <li><strong>Connect tools</strong> to real data sources and APIs</li>
+                    <li><strong>Add memory</strong> so the system remembers patient context</li>
+                    <li><strong>Chain everything</strong> together for complex workflows</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>Phase 3: Making it Production-Ready (Week 5)</h3>
+                <ul>
+                    <li><strong>Evaluate</strong> how well your system performs</li>
+                    <li><strong>Monitor</strong> errors and success rates</li>
+                    <li><strong>Build UI</strong> for users to interact with</li>
+                    <li><strong>Test & refine</strong> based on real scenarios</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>💡 Key Insight</h3>
+                <p>You'll start with simple concepts, then progressively add complexity. Each step builds on the previous one, so don't skip ahead!</p>
+            </div>
+        </div>
+
         <!-- Slide 2: Problem Scenario -->
         <div class="slide">
             <h1>🔍 Problem Scenario</h1>
@@ -111,6 +152,33 @@ Also, can you summarize latest treatment methods?"
         <!-- Slide 3: Part 1 Overview -->
         <div class="slide" id="part1">
             <h1>Part 1: Agentic System Design</h1>
+            
+            <h3>🤔 First, Let's Understand: What is an Agent?</h3>
+            <div class="objective">
+                <p><strong>Simple Definition:</strong> An agent is a piece of software that can:</p>
+                <ol>
+                    <li><strong>Perceive</strong> - Understand what the user wants</li>
+                    <li><strong>Think</strong> - Plan how to accomplish it</li>
+                    <li><strong>Act</strong> - Use tools to get things done</li>
+                    <li><strong>Learn</strong> - Remember context for next time</li>
+                </ol>
+            </div>
+
+            <h3>🏥 Healthcare Example</h3>
+            <div class="workflow">
+                <strong>User says:</strong> "Book a nephrologist for my father with kidney disease"<br><br>
+                
+                <strong>Agent thinks:</strong><br>
+                1. I need to know who the father is → <em>Use memory to find patient</em><br>
+                2. I need to find a nephrologist → <em>Use appointment tool</em><br>
+                3. I should check medical history → <em>Use records tool</em><br>
+                4. I should explain kidney disease → <em>Use search tool</em><br><br>
+                
+                <strong>Agent acts:</strong> Executes each step in order<br>
+                <strong>Agent responds:</strong> "Booked Dr. Johnson for Feb 20. Your father has Stage 3 CKD..."
+            </div>
+
+            <h3>🧩 The Four Components You'll Build</h3>
             
             <div class="architecture">
 🧠 Multi-Agent Architecture
@@ -149,13 +217,36 @@ Also, can you summarize latest treatment methods?"
             <h1>Step 1: Agent Planning & Goal Decomposition</h1>
             
             <div class="step">
-                <h3>🎯 Objective</h3>
-                <p>Create a planner that interprets multi-step queries and breaks them into executable sub-goals</p>
+                <h3>🎯 What You're Building</h3>
+                <p>A "planner" that takes a complex request and breaks it into simple steps</p>
             </div>
 
-            <h3>Implementation Approach</h3>
+            <h3>💡 The Concept (No Code Yet!)</h3>
+            <div class="workflow">
+                <strong>Input:</strong> "Book nephrologist for father with kidney disease"<br><br>
+                <strong>Planner breaks it down:</strong><br>
+                → Step 1: Who is "father"? (need patient ID)<br>
+                → Step 2: What's his medical history? (need records)<br>
+                → Step 3: Find nephrologist slots (need appointment system)<br>
+                → Step 4: Book the appointment<br>
+                → Step 5: Get kidney disease info (need search)<br><br>
+                <strong>Output:</strong> A numbered plan with tools needed for each step
+            </div>
+
+            <h3>🔧 How It Works</h3>
             <ol>
-                <li><strong>Parse User Intent</strong>
+                <li><strong>Use LLM to understand</strong> - Ask the LLM to analyze the query</li>
+                <li><strong>Identify actions</strong> - What needs to be done? (book, retrieve, search)</li>
+                <li><strong>Map to tools</strong> - Which tool handles each action?</li>
+            </ol>
+
+            <div class="warning">
+                <strong>💡 Key Point:</strong> The planner doesn't DO anything - it just creates a plan. Other agents execute it.
+            </div>
+
+            <h3>📝 Now Let's See the Code</h3>
+            <div class="step">
+                <strong>1. Parse User Intent</strong>
                     <div class="code"><pre>
 # Use LLM to understand the query
 prompt = """
@@ -167,9 +258,10 @@ Analyze this healthcare query and identify:
 Query: {user_query}
 """
 </pre></div>
-                </li>
+                </div>
                 
-                <li><strong>Decompose into Sub-Goals</strong>
+                <div class="step">
+                <strong>2. Decompose into Sub-Goals</strong>
                     <div class="workflow">
                         <strong>Example Breakdown:</strong><br>
                         Query: "Book nephrologist for father with kidney disease"<br><br>
@@ -179,9 +271,10 @@ Query: {user_query}
                         → Sub-goal 4: Book appointment<br>
                         → Sub-goal 5: Search kidney disease treatments
                     </div>
-                </li>
+                </div>
 
-                <li><strong>Map Tools to Goals</strong>
+                <div class="step">
+                <strong>3. Map Tools to Goals</strong>
                     <div class="code"><pre>
 tools_mapping = {
     "retrieve_history": MedicalRecordsTool,
@@ -189,11 +282,11 @@ tools_mapping = {
     "search_info": MedicalSearchTool
 }
 </pre></div>
-                </li>
-            </ol>
+                </div>
+            </div>
 
             <div class="warning">
-                <strong>💡 Key Concept:</strong> The planner doesn't execute tasks—it creates an execution plan that other agents follow.
+                <strong>💡 Summary:</strong> You've created a planner that understands queries, breaks them into steps, and identifies which tools to use. Next, we'll build those tools!
             </div>
         </div>
 
