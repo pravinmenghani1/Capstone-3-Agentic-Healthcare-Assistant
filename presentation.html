@@ -14,7 +14,8 @@
         h3 { color: #667eea; font-size: 1.5em; margin: 20px 0 10px 0; }
         .objective { background: #f0f4ff; padding: 20px; border-left: 5px solid #667eea; margin: 20px 0; border-radius: 5px; }
         .step { background: #fff9e6; padding: 15px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #ffc107; }
-        .code { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: 'Courier New', monospace; margin: 10px 0; white-space: pre-wrap; word-wrap: break-word; }
+        .code { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: 'Courier New', monospace; margin: 10px 0; }
+        .code pre { margin: 0; color: #f8f8f2; white-space: pre; font-family: inherit; }
         .workflow { background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 15px 0; }
         .tool-box { display: inline-block; background: #667eea; color: white; padding: 8px 15px; margin: 5px; border-radius: 20px; font-size: 0.9em; }
         .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 5px; }
@@ -99,11 +100,11 @@
             </div>
 
             <h3>📝 Example User Query</h3>
-            <div class="code">
+            <div class="code"><pre>
 "My 70-year-old father has chronic kidney disease. 
 I want to book a nephrologist for him. 
 Also, can you summarize latest treatment methods?"
-            </div>
+            </pre></div>
             <p style="margin-top: 15px;"><em>The system must autonomously plan, retrieve context, book appointment, and search medical information.</em></p>
         </div>
 
@@ -155,7 +156,7 @@ Also, can you summarize latest treatment methods?"
             <h3>Implementation Approach</h3>
             <ol>
                 <li><strong>Parse User Intent</strong>
-                    <div class="code"># Use LLM to understand the query
+                    <div class="code"><pre># Use LLM to understand the query
 prompt = """
 Analyze this healthcare query and identify:
 1. Patient information needed
@@ -163,7 +164,7 @@ Analyze this healthcare query and identify:
 3. Required tools for each action
 
 Query: {user_query}
-"""</div>
+"""</pre></div>
                 </li>
                 
                 <li><strong>Decompose into Sub-Goals</strong>
@@ -179,11 +180,11 @@ Query: {user_query}
                 </li>
 
                 <li><strong>Map Tools to Goals</strong>
-                    <div class="code">tools_mapping = {
+                    <div class="code"><pre>tools_mapping = {
     "retrieve_history": MedicalRecordsTool,
     "book_appointment": AppointmentTool,
     "search_info": MedicalSearchTool
-}</div>
+}</pre></div>
                 </li>
             </ol>
 
@@ -200,7 +201,7 @@ Query: {user_query}
             
             <div class="step">
                 <strong>1. Appointment Booking Tool</strong>
-                <div class="code">
+                <div class="code"><pre>
 class AppointmentTools:
     def get_available_slots(self, specialty, date):
         # Query doctor schedule database
@@ -209,12 +210,12 @@ class AppointmentTools:
     def book_appointment(self, doctor_id, patient_id, slot):
         # Create appointment record
         return confirmation
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>2. Medical Records Tool</strong>
-                <div class="code">
+                <div class="code"><pre>
 class MedicalTools:
     def get_patient_history(self, patient_id):
         # Retrieve from EHR database
@@ -223,21 +224,21 @@ class MedicalTools:
     def add_record(self, patient_id, record):
         # Update patient records
         return success
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>3. Medical Search Tool</strong>
-                <div class="code">
+                <div class="code"><pre>
 class SearchTools:
     def search_disease_info(self, disease_name):
         # Query Medline/WHO APIs
         return disease_information
-                </div>
+                </pre></div>
             </div>
 
             <h3>💾 Memory System (Vector Database)</h3>
-            <div class="code">
+            <div class="code"><pre>
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 
@@ -249,7 +250,7 @@ vector_store = FAISS.from_documents(patient_docs, embeddings)
 
 # Retrieve relevant context
 context = vector_store.similarity_search(query, k=3)
-            </div>
+            </pre></div>
 
             <div class="success">
                 <strong>✅ Why Vector Memory?</strong> Enables semantic search over patient histories, allowing agents to find relevant context even with different phrasing.
@@ -264,7 +265,7 @@ context = vector_store.similarity_search(query, k=3)
             
             <div class="step">
                 <strong>Planner Agent Prompt</strong>
-                <div class="code">
+                <div class="code"><pre>
 PLANNER_PROMPT = """
 You are a medical task planner. Analyze the query and create a step-by-step plan.
 
@@ -278,12 +279,12 @@ Patient Context: {patient_context}
 
 Create a numbered plan with tool assignments.
 """
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>Records Agent Prompt</strong>
-                <div class="code">
+                <div class="code"><pre>
 RECORDS_PROMPT = """
 Retrieve and summarize medical history for: {patient_name}
 
@@ -295,12 +296,12 @@ Focus on:
 
 Format as clinical summary.
 """
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>Search Agent Prompt</strong>
-                <div class="code">
+                <div class="code"><pre>
 SEARCH_PROMPT = """
 Search for latest information on: {disease_name}
 
@@ -311,7 +312,7 @@ Include:
 
 Cite sources from trusted medical databases.
 """
-                </div>
+                </pre></div>
             </div>
 
             <h3>🔗 Task Chaining Pattern</h3>
@@ -324,14 +325,14 @@ Cite sources from trusted medical databases.
                 5. <span class="highlight">Synthesizer</span> → Combines all results into response
             </div>
 
-            <div class="code">
+            <div class="code"><pre>
 # Chain execution example
 plan = planner_agent.create_plan(user_query)
 context = records_agent.execute(plan.step1)
 appointment = appointment_agent.execute(plan.step2, context)
 info = search_agent.execute(plan.step3)
 response = synthesize_response(context, appointment, info)
-            </div>
+            </pre></div>
         </div>
 
         <!-- Slide 7: Step 4 - Agent Execution Flow -->
@@ -340,37 +341,37 @@ response = synthesize_response(context, appointment, info)
             
             <h3>📋 Sample Scenario Walkthrough</h3>
             
-            <div class="code">
+            <div class="code"><pre>
 User Input: "My 70-year-old father has chronic kidney disease. 
 I want to book a nephrologist for him. 
 Also, can you summarize latest treatment methods?"
-            </div>
+            </pre></div>
 
             <h3>🔄 Step-by-Step Execution</h3>
             
             <div class="step">
                 <strong>Step 1: Identify Patient & Context</strong>
-                <div class="code">
+                <div class="code"><pre>
 # Planner identifies: father, 70 years old, kidney disease
 patient_query = "father with chronic kidney disease"
 patient_context = memory.search(patient_query)
 # Returns: Patient ID, medical history, current conditions
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>Step 2: Retrieve Medical History</strong>
-                <div class="code">
+                <div class="code"><pre>
 # Records Agent retrieves full history
 history = medical_tools.get_patient_history(patient_id)
 summary = llm.summarize(history)
 # Output: "70-year-old male, CKD Stage 3, on ACE inhibitors..."
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>Step 3: Query Doctor Calendar & Book</strong>
-                <div class="code">
+                <div class="code"><pre>
 # Appointment Agent finds nephrologist slots
 slots = appointment_tools.get_available_slots(
     specialty="Nephrology",
@@ -382,19 +383,19 @@ confirmation = appointment_tools.book_appointment(
     patient_id=patient_id,
     slot=slots[0]
 )
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>Step 4: Search & Summarize Treatment Options</strong>
-                <div class="code">
+                <div class="code"><pre>
 # Search Agent queries medical databases
 search_results = search_tools.search_disease_info(
     "chronic kidney disease treatment"
 )
 # RAG pipeline retrieves and summarizes
 treatment_summary = rag_pipeline.summarize(search_results)
-                </div>
+                </pre></div>
             </div>
 
             <div class="success">
@@ -461,7 +462,7 @@ treatment_summary = rag_pipeline.summarize(search_results)
             
             <div class="step">
                 <strong>1. QA Evaluation Chain</strong>
-                <div class="code">
+                <div class="code"><pre>
 from langchain.evaluation import QAEvalChain
 
 # Create evaluation chain
@@ -479,12 +480,12 @@ test_cases = [
 # Evaluate
 results = eval_chain.evaluate(test_cases)
 # Returns: accuracy, relevance, completeness scores
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>2. Tool Success Tracking</strong>
-                <div class="code">
+                <div class="code"><pre>
 class ToolMonitor:
     def log_execution(self, tool_name, success, duration):
         self.metrics[tool_name].append({
@@ -496,12 +497,12 @@ class ToolMonitor:
     def get_success_rate(self, tool_name):
         executions = self.metrics[tool_name]
         return sum(e['success'] for e in executions) / len(executions)
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>3. Response Quality Metrics</strong>
-                <div class="code">
+                <div class="code"><pre>
 def evaluate_response(response, expected_elements):
     scores = {
         'accuracy': check_factual_accuracy(response),
@@ -510,7 +511,7 @@ def evaluate_response(response, expected_elements):
         'coherence': assess_coherence(response)
     }
     return scores
-                </div>
+                </pre></div>
             </div>
 
             <div class="warning">
@@ -526,7 +527,7 @@ def evaluate_response(response, expected_elements):
             
             <div class="step">
                 <strong>1. Main Interface</strong>
-                <div class="code">
+                <div class="code"><pre>
 import streamlit as st
 
 st.title("🏥 Agentic Healthcare Assistant")
@@ -542,12 +543,12 @@ if st.button("Process Query"):
         # Display results
         st.success("✅ Task Completed")
         st.write(result.response)
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>2. Real-Time Metrics Dashboard</strong>
-                <div class="code">
+                <div class="code"><pre>
 # Display performance metrics
 col1, col2, col3 = st.columns(3)
 
@@ -561,12 +562,12 @@ with col3:
 # Tool performance chart
 fig = px.bar(tool_metrics, x='tool', y='success_rate')
 st.plotly_chart(fig)
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>3. Patient & Appointment Views</strong>
-                <div class="code">
+                <div class="code"><pre>
 # Patient records view
 st.subheader("📋 Patient Records")
 patient_df = pd.DataFrame(patients)
@@ -576,12 +577,12 @@ st.dataframe(patient_df)
 st.subheader("📅 Upcoming Appointments")
 appointments_df = pd.DataFrame(appointments)
 st.dataframe(appointments_df)
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>4. Medical Information Display</strong>
-                <div class="code">
+                <div class="code"><pre>
 # Show retrieved medical information
 st.subheader("🔍 Latest Medical Information")
 with st.expander("Treatment Options"):
@@ -589,7 +590,7 @@ with st.expander("Treatment Options"):
 with st.expander("Sources"):
     for source in sources:
         st.write(f"- {source}")
-                </div>
+                </pre></div>
             </div>
         </div>
 
@@ -601,7 +602,7 @@ with st.expander("Sources"):
             
             <div class="step">
                 <strong>Display Planning Breakdown</strong>
-                <div class="code">
+                <div class="code"><pre>
 st.subheader("🔍 Agent Planning Trace")
 
 # Show step-by-step planning
@@ -612,12 +613,12 @@ for i, step in enumerate(plan.steps, 1):
         st.write(f"**Output:** {step.output}")
         st.write(f"**Duration:** {step.duration}s")
         st.write(f"**Status:** {'✅ Success' if step.success else '❌ Failed'}")
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>Memory Context Viewer</strong>
-                <div class="code">
+                <div class="code"><pre>
 st.subheader("💾 Retrieved Context")
 
 # Show what was retrieved from vector memory
@@ -628,12 +629,12 @@ for item in context_items:
     **Retrieved:** {item.content[:200]}...
     **Similarity Score:** {item.score:.3f}
     """)
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>Interactive Testing Interface</strong>
-                <div class="code">
+                <div class="code"><pre>
 st.subheader("🧪 Test Different Scenarios")
 
 # Predefined test scenarios
@@ -648,12 +649,12 @@ selected = st.selectbox("Choose test scenario:", scenarios.keys())
 if st.button("Run Test"):
     result = agent_coordinator.process(scenarios[selected])
     st.write(result)
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
                 <strong>Tool Usage Logs</strong>
-                <div class="code">
+                <div class="code"><pre>
 st.subheader("📊 Tool Usage Statistics")
 
 # Create usage heatmap
@@ -666,7 +667,7 @@ st.plotly_chart(fig)
 st.write("**Success Rate by Tool:**")
 success_df = tool_usage_df.groupby('tool')['success'].mean()
 st.bar_chart(success_df)
-                </div>
+                </pre></div>
             </div>
         </div>
 
@@ -684,10 +685,10 @@ st.bar_chart(success_df)
                     <li>Create sample patient database</li>
                     <li>Initialize vector store with patient data</li>
                 </ul>
-                <div class="code">
+                <div class="code"><pre>
 pip install langchain faiss-cpu streamlit pandas plotly
 pip install sentence-transformers openai
-                </div>
+                </pre></div>
             </div>
 
             <div class="step">
@@ -776,7 +777,7 @@ pip install sentence-transformers openai
             </div>
 
             <h3>📦 Complete Requirements</h3>
-            <div class="code">
+            <div class="code"><pre>
 # requirements.txt
 langchain==0.1.0
 langchain-openai==0.0.2
@@ -787,7 +788,7 @@ pandas==2.0.0
 plotly==5.17.0
 python-dotenv==1.0.0
 openpyxl==3.1.2
-            </div>
+            </pre></div>
         </div>
 
         <!-- Slide 14: Demo Scenario -->
@@ -796,60 +797,60 @@ openpyxl==3.1.2
             
             <h3>End-to-End Workflow Example</h3>
             
-            <div class="code">
+            <div class="code"><pre>
 User Query: "My 70-year-old father has chronic kidney disease. 
 I want to book a nephrologist for him. 
 Also, can you summarize latest treatment methods?"
-            </div>
+            </pre></div>
 
             <div class="workflow">
                 <h4>🔄 System Processing Flow</h4>
                 
                 <p><strong>1. Planner Agent Analyzes Query</strong></p>
-                <div class="code">
+                <div class="code"><pre>
 Identified Tasks:
 ✓ Retrieve patient context (father, 70, kidney disease)
 ✓ Get medical history
 ✓ Find nephrologist availability
 ✓ Book appointment
 ✓ Search treatment information
-                </div>
+                </pre></div>
 
                 <p><strong>2. Memory System Retrieves Context</strong></p>
-                <div class="code">
+                <div class="code"><pre>
 Vector Search Results:
 - Patient: Ramesh Kulkarni (65, Male)
 - Condition: Chronic Kidney Disease Stage 3
 - Current Medications: ACE inhibitors, Diuretics
 - Last Visit: 2 months ago
-                </div>
+                </pre></div>
 
                 <p><strong>3. Records Agent Summarizes History</strong></p>
-                <div class="code">
+                <div class="code"><pre>
 Clinical Summary:
 Patient is a 65-year-old male with Stage 3 CKD. 
 Currently managed with ACE inhibitors and dietary modifications.
 eGFR: 45 ml/min. Regular monitoring required.
-                </div>
+                </pre></div>
 
                 <p><strong>4. Appointment Agent Books Slot</strong></p>
-                <div class="code">
+                <div class="code"><pre>
 Available Nephrologists:
 ✓ Dr. Sarah Johnson - Feb 20, 2026, 10:00 AM
   Dr. Michael Chen - Feb 22, 2026, 2:00 PM
 
 Booking: Dr. Sarah Johnson, Feb 20, 10:00 AM
 Confirmation: APT-2026-001
-                </div>
+                </pre></div>
 
                 <p><strong>5. Search Agent Retrieves Treatment Info</strong></p>
-                <div class="code">
+                <div class="code"><pre>
 Medical Search Results:
 - KDIGO Guidelines 2024: ACE inhibitors first-line
 - Recent Study: SGLT2 inhibitors show benefit
 - Dietary: Protein restriction, sodium control
 - Monitoring: eGFR every 3 months
-                </div>
+                </pre></div>
 
                 <p><strong>6. Final Response Synthesis</strong></p>
                 <div class="success">
