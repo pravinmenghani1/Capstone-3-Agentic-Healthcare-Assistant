@@ -14,8 +14,8 @@
         h3 { color: #667eea; font-size: 1.5em; margin: 20px 0 10px 0; }
         .objective { background: #f0f4ff; padding: 20px; border-left: 5px solid #667eea; margin: 20px 0; border-radius: 5px; }
         .step { background: #fff9e6; padding: 15px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #ffc107; }
-        .code { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: 'Courier New', monospace; margin: 10px 0; }
-        .code pre { margin: 0; color: #f8f8f2; white-space: pre; font-family: inherit; }
+        .code { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; margin: 15px 0; font-size: 14px; line-height: 1.6; border: 1px solid #3e3e3e; }
+        .code pre { margin: 0; padding: 0; color: #d4d4d4; white-space: pre; font-family: inherit; font-size: inherit; line-height: inherit; }
         .workflow { background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 15px 0; }
         .tool-box { display: inline-block; background: #667eea; color: white; padding: 8px 15px; margin: 5px; border-radius: 20px; font-size: 0.9em; }
         .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 5px; }
@@ -156,7 +156,8 @@ Also, can you summarize latest treatment methods?"
             <h3>Implementation Approach</h3>
             <ol>
                 <li><strong>Parse User Intent</strong>
-                    <div class="code"><pre># Use LLM to understand the query
+                    <div class="code"><pre>
+# Use LLM to understand the query
 prompt = """
 Analyze this healthcare query and identify:
 1. Patient information needed
@@ -164,7 +165,8 @@ Analyze this healthcare query and identify:
 3. Required tools for each action
 
 Query: {user_query}
-"""</pre></div>
+"""
+</pre></div>
                 </li>
                 
                 <li><strong>Decompose into Sub-Goals</strong>
@@ -180,11 +182,13 @@ Query: {user_query}
                 </li>
 
                 <li><strong>Map Tools to Goals</strong>
-                    <div class="code"><pre>tools_mapping = {
+                    <div class="code"><pre>
+tools_mapping = {
     "retrieve_history": MedicalRecordsTool,
     "book_appointment": AppointmentTool,
     "search_info": MedicalSearchTool
-}</pre></div>
+}
+</pre></div>
                 </li>
             </ol>
 
