@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Healthcare Assistant - Capstone Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .slide { background: white; border-radius: 15px; padding: 40px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2); min-height: 500px; }
+        h1 { color: #667eea; font-size: 2.5em; margin-bottom: 20px; border-bottom: 4px solid #667eea; padding-bottom: 10px; }
+        h2 { color: #764ba2; font-size: 2em; margin: 30px 0 15px 0; }
+        h3 { color: #667eea; font-size: 1.5em; margin: 20px 0 10px 0; }
+        .objective { background: #f0f4ff; padding: 20px; border-left: 5px solid #667eea; margin: 20px 0; border-radius: 5px; }
+        .step { background: #fff9e6; padding: 15px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #ffc107; }
+        .code { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: 'Courier New', monospace; margin: 10px 0; }
+        .workflow { background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 15px 0; }
+        .tool-box { display: inline-block; background: #667eea; color: white; padding: 8px 15px; margin: 5px; border-radius: 20px; font-size: 0.9em; }
+        .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .success { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        ul, ol { margin-left: 30px; line-height: 1.8; }
+        .architecture { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; font-family: monospace; }
+        .nav { position: fixed; top: 20px; right: 20px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .nav a { display: block; color: #667eea; text-decoration: none; padding: 5px 10px; margin: 5px 0; border-radius: 5px; }
+        .nav a:hover { background: #f0f4ff; }
+        .highlight { background: #ffeb3b; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <strong>Quick Nav</strong>
+        <a href="#intro">Introduction</a>
+        <a href="#part1">Part 1: System Design</a>
+        <a href="#part2">Part 2: LLMOps</a>
+        <a href="#implementation">Implementation</a>
+        <a href="#demo">Demo Scenario</a>
+    </div>
+
+    <div class="container">
+
+        <!-- Slide 1: Title -->
+        <div class="slide" id="intro">
+            <h1>🏥 Agentic Healthcare Assistant</h1>
+            <h2>Applied Generative AI Capstone Project</h2>
+            <div class="objective">
+                <h3>🎯 Project Objective</h3>
+                <p>Build an intelligent healthcare assistant that autonomously coordinates multiple medical tasks using:</p>
+                <ul>
+                    <li><strong>Agentic AI</strong> - Multi-agent systems with planning and execution</li>
+                    <li><strong>RAG Pipelines</strong> - Retrieval-Augmented Generation for medical knowledge</li>
+                    <li><strong>LLMOps</strong> - Model evaluation, monitoring, and deployment</li>
+                </ul>
+            </div>
+            
+            <h3>🚀 What You'll Build</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div class="step">
+                    <strong>📅 Appointment Booking</strong>
+                    <p>Automated scheduling based on patient needs and doctor availability</p>
+                </div>
+                <div class="step">
+                    <strong>📋 Medical Records</strong>
+                    <p>Add, update, and retrieve patient histories with context</p>
+                </div>
+                <div class="step">
+                    <strong>🔍 Information Search</strong>
+                    <p>Fetch latest disease info from trusted sources (Medline, WHO)</p>
+                </div>
+                <div class="step">
+                    <strong>📊 Monitoring Dashboard</strong>
+                    <p>Real-time tracking and evaluation metrics</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem Scenario -->
+        <div class="slide">
+            <h1>🔍 Problem Scenario</h1>
+            <div class="warning">
+                <h3>Current Healthcare Challenges</h3>
+                <ul>
+                    <li>Siloed tools with limited automation</li>
+                    <li>Fragmented patient experiences</li>
+                    <li>Manual coordination of interdependent tasks</li>
+                    <li>Inefficient information retrieval</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>✅ Agentic AI Solution</h3>
+                <p>Transform healthcare administration through autonomous task coordination:</p>
+                <ul>
+                    <li><strong>Planning Agent</strong> - Decomposes complex queries into sub-tasks</li>
+                    <li><strong>Tool Integration</strong> - Connects to appointment, records, and search APIs</li>
+                    <li><strong>Memory Systems</strong> - Maintains patient context across interactions</li>
+                    <li><strong>RAG Pipeline</strong> - Retrieves relevant medical information on-demand</li>
+                </ul>
+            </div>
+
+            <h3>📝 Example User Query</h3>
+            <div class="code">
+"My 70-year-old father has chronic kidney disease. 
+I want to book a nephrologist for him. 
+Also, can you summarize latest treatment methods?"
+            </div>
+            <p style="margin-top: 15px;"><em>The system must autonomously plan, retrieve context, book appointment, and search medical information.</em></p>
+        </div>
+
+        <!-- Slide 3: Part 1 Overview -->
+        <div class="slide" id="part1">
+            <h1>Part 1: Agentic System Design</h1>
+            
+            <div class="architecture">
+🧠 Multi-Agent Architecture
+├── 📋 Planner Agent (Goal Decomposition)
+│   ├── Parse user intent
+│   ├── Break into sub-goals
+│   └── Identify required tools
+│
+├── 📅 Appointment Agent
+│   ├── Query doctor schedules
+│   ├── Find available slots
+│   └── Book appointments
+│
+├── 📄 Records Agent
+│   ├── Retrieve patient history
+│   ├── Update medical records
+│   └── Summarize clinical data
+│
+└── 🔍 Search Agent
+    ├── Query medical databases
+    ├── Fetch disease information
+    └── Summarize treatment options
+            </div>
+
+            <h3>🔧 Core Components</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="tool-box">💾 Vector Memory (FAISS)</div>
+                <div class="tool-box">🛠️ Tool Integration</div>
+                <div class="tool-box">🔗 Prompt Chaining</div>
+                <div class="tool-box">📊 Context Management</div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Step 1 - Planning -->
+        <div class="slide">
+            <h1>Step 1: Agent Planning & Goal Decomposition</h1>
+            
+            <div class="step">
+                <h3>🎯 Objective</h3>
+                <p>Create a planner that interprets multi-step queries and breaks them into executable sub-goals</p>
+            </div>
+
+            <h3>Implementation Approach</h3>
+            <ol>
+                <li><strong>Parse User Intent</strong>
+                    <div class="code">
+# Use LLM to understand the query
+prompt = """
+Analyze this healthcare query and identify:
+1. Patient information needed
+2. Actions to perform (book, retrieve, search)
+3. Required tools for each action
+
+Query: {user_query}
+"""
+                    </div>
+                </li>
+                
+                <li><strong>Decompose into Sub-Goals</strong>
+                    <div class="workflow">
+                        <strong>Example Breakdown:</strong><br>
+                        Query: "Book nephrologist for father with kidney disease"<br><br>
+                        → Sub-goal 1: Identify patient (father)<br>
+                        → Sub-goal 2: Retrieve medical history<br>
+                        → Sub-goal 3: Find nephrologist availability<br>
+                        → Sub-goal 4: Book appointment<br>
+                        → Sub-goal 5: Search kidney disease treatments
+                    </div>
+                </li>
+
+                <li><strong>Map Tools to Goals</strong>
+                    <div class="code">
+tools_mapping = {
+    "retrieve_history": MedicalRecordsTool,
+    "book_appointment": AppointmentTool,
+    "search_info": MedicalSearchTool
+}
+                    </div>
+                </li>
+            </ol>
+
+            <div class="warning">
+                <strong>💡 Key Concept:</strong> The planner doesn't execute tasks—it creates an execution plan that other agents follow.
+            </div>
+        </div>
+
+        <!-- Slide 5: Step 2 - Tools & Memory -->
+        <div class="slide">
+            <h1>Step 2: Tool and Memory Setup</h1>
+            
+            <h3>🛠️ Tool Integration</h3>
+            
+            <div class="step">
+                <strong>1. Appointment Booking Tool</strong>
+                <div class="code">
+class AppointmentTools:
+    def get_available_slots(self, specialty, date):
+        # Query doctor schedule database
+        return available_slots
+    
+    def book_appointment(self, doctor_id, patient_id, slot):
+        # Create appointment record
+        return confirmation
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>2. Medical Records Tool</strong>
+                <div class="code">
+class MedicalTools:
+    def get_patient_history(self, patient_id):
+        # Retrieve from EHR database
+        return medical_history
+    
+    def add_record(self, patient_id, record):
+        # Update patient records
+        return success
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>3. Medical Search Tool</strong>
+                <div class="code">
+class SearchTools:
+    def search_disease_info(self, disease_name):
+        # Query Medline/WHO APIs
+        return disease_information
+                </div>
+            </div>
+
+            <h3>💾 Memory System (Vector Database)</h3>
+            <div class="code">
+from langchain.vectorstores import FAISS
+from langchain.embeddings import HuggingFaceEmbeddings
+
+# Initialize vector store for patient summaries
+embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
+vector_store = FAISS.from_documents(patient_docs, embeddings)
+
+# Retrieve relevant context
+context = vector_store.similarity_search(query, k=3)
+            </div>
+
+            <div class="success">
+                <strong>✅ Why Vector Memory?</strong> Enables semantic search over patient histories, allowing agents to find relevant context even with different phrasing.
+            </div>
+        </div>
+
+        <!-- Slide 6: Step 3 - Prompt Engineering -->
+        <div class="slide">
+            <h1>Step 3: Prompt Engineering & Task Chaining</h1>
+            
+            <h3>🎨 Structured Prompts for Each Agent</h3>
+            
+            <div class="step">
+                <strong>Planner Agent Prompt</strong>
+                <div class="code">
+PLANNER_PROMPT = """
+You are a medical task planner. Analyze the query and create a step-by-step plan.
+
+Available Tools:
+- retrieve_patient_history
+- book_appointment
+- search_medical_info
+
+Query: {user_query}
+Patient Context: {patient_context}
+
+Create a numbered plan with tool assignments.
+"""
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>Records Agent Prompt</strong>
+                <div class="code">
+RECORDS_PROMPT = """
+Retrieve and summarize medical history for: {patient_name}
+
+Focus on:
+- Current conditions
+- Past diagnoses
+- Medications
+- Relevant alerts
+
+Format as clinical summary.
+"""
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>Search Agent Prompt</strong>
+                <div class="code">
+SEARCH_PROMPT = """
+Search for latest information on: {disease_name}
+
+Include:
+- Treatment options
+- Recent research
+- Clinical guidelines
+
+Cite sources from trusted medical databases.
+"""
+                </div>
+            </div>
+
+            <h3>🔗 Task Chaining Pattern</h3>
+            <div class="workflow">
+                <strong>Sequential Execution:</strong><br><br>
+                1. <span class="highlight">Planner</span> → Creates execution plan<br>
+                2. <span class="highlight">Records Agent</span> → Retrieves patient context<br>
+                3. <span class="highlight">Appointment Agent</span> → Books slot (uses context)<br>
+                4. <span class="highlight">Search Agent</span> → Fetches disease info<br>
+                5. <span class="highlight">Synthesizer</span> → Combines all results into response
+            </div>
+
+            <div class="code">
+# Chain execution example
+plan = planner_agent.create_plan(user_query)
+context = records_agent.execute(plan.step1)
+appointment = appointment_agent.execute(plan.step2, context)
+info = search_agent.execute(plan.step3)
+response = synthesize_response(context, appointment, info)
+            </div>
+        </div>
+
+        <!-- Slide 7: Step 4 - Agent Execution Flow -->
+        <div class="slide">
+            <h1>Step 4: Agent Execution Flow</h1>
+            
+            <h3>📋 Sample Scenario Walkthrough</h3>
+            
+            <div class="code">
+User Input: "My 70-year-old father has chronic kidney disease. 
+I want to book a nephrologist for him. 
+Also, can you summarize latest treatment methods?"
+            </div>
+
+            <h3>🔄 Step-by-Step Execution</h3>
+            
+            <div class="step">
+                <strong>Step 1: Identify Patient & Context</strong>
+                <div class="code">
+# Planner identifies: father, 70 years old, kidney disease
+patient_query = "father with chronic kidney disease"
+patient_context = memory.search(patient_query)
+# Returns: Patient ID, medical history, current conditions
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>Step 2: Retrieve Medical History</strong>
+                <div class="code">
+# Records Agent retrieves full history
+history = medical_tools.get_patient_history(patient_id)
+summary = llm.summarize(history)
+# Output: "70-year-old male, CKD Stage 3, on ACE inhibitors..."
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>Step 3: Query Doctor Calendar & Book</strong>
+                <div class="code">
+# Appointment Agent finds nephrologist slots
+slots = appointment_tools.get_available_slots(
+    specialty="Nephrology",
+    date_range=next_7_days
+)
+# Book first available slot
+confirmation = appointment_tools.book_appointment(
+    doctor_id=slots[0].doctor_id,
+    patient_id=patient_id,
+    slot=slots[0]
+)
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>Step 4: Search & Summarize Treatment Options</strong>
+                <div class="code">
+# Search Agent queries medical databases
+search_results = search_tools.search_disease_info(
+    "chronic kidney disease treatment"
+)
+# RAG pipeline retrieves and summarizes
+treatment_summary = rag_pipeline.summarize(search_results)
+                </div>
+            </div>
+
+            <div class="success">
+                <strong>✅ Final Response:</strong> Combines all results into coherent answer with appointment details, patient context, and treatment information.
+            </div>
+        </div>
+
+        <!-- Slide 8: Part 2 - LLMOps -->
+        <div class="slide" id="part2">
+            <h1>Part 2: LLMOps - Evaluation & Monitoring</h1>
+            
+            <div class="objective">
+                <h3>🎯 LLMOps Goals</h3>
+                <ul>
+                    <li>Evaluate model accuracy and relevance</li>
+                    <li>Monitor agent performance per module</li>
+                    <li>Track tool success rates</li>
+                    <li>Visualize metrics in real-time dashboard</li>
+                </ul>
+            </div>
+
+            <h3>📊 Key Metrics to Track</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                <div class="step">
+                    <strong>Response Quality</strong>
+                    <ul>
+                        <li>Accuracy score</li>
+                        <li>Relevance rating</li>
+                        <li>Completeness check</li>
+                    </ul>
+                </div>
+                <div class="step">
+                    <strong>Tool Performance</strong>
+                    <ul>
+                        <li>Success rate per tool</li>
+                        <li>Execution time</li>
+                        <li>Error frequency</li>
+                    </ul>
+                </div>
+                <div class="step">
+                    <strong>Agent Efficiency</strong>
+                    <ul>
+                        <li>Planning accuracy</li>
+                        <li>Task completion rate</li>
+                        <li>Context retrieval precision</li>
+                    </ul>
+                </div>
+                <div class="step">
+                    <strong>User Experience</strong>
+                    <ul>
+                        <li>Response time</li>
+                        <li>Query resolution rate</li>
+                        <li>User satisfaction</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Model Evaluation -->
+        <div class="slide">
+            <h1>Step 6: Model Evaluation</h1>
+            
+            <h3>🔍 Evaluation Framework</h3>
+            
+            <div class="step">
+                <strong>1. QA Evaluation Chain</strong>
+                <div class="code">
+from langchain.evaluation import QAEvalChain
+
+# Create evaluation chain
+eval_chain = QAEvalChain.from_llm(llm)
+
+# Test cases
+test_cases = [
+    {
+        "question": "What is patient's current condition?",
+        "answer": agent_response,
+        "ground_truth": "Chronic kidney disease stage 3"
+    }
+]
+
+# Evaluate
+results = eval_chain.evaluate(test_cases)
+# Returns: accuracy, relevance, completeness scores
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>2. Tool Success Tracking</strong>
+                <div class="code">
+class ToolMonitor:
+    def log_execution(self, tool_name, success, duration):
+        self.metrics[tool_name].append({
+            'success': success,
+            'duration': duration,
+            'timestamp': datetime.now()
+        })
+    
+    def get_success_rate(self, tool_name):
+        executions = self.metrics[tool_name]
+        return sum(e['success'] for e in executions) / len(executions)
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>3. Response Quality Metrics</strong>
+                <div class="code">
+def evaluate_response(response, expected_elements):
+    scores = {
+        'accuracy': check_factual_accuracy(response),
+        'relevance': measure_relevance(response, query),
+        'completeness': check_required_elements(response, expected_elements),
+        'coherence': assess_coherence(response)
+    }
+    return scores
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>💡 Best Practice:</strong> Log every agent interaction with timestamps, inputs, outputs, and evaluation scores for continuous improvement.
+            </div>
+        </div>
+
+        <!-- Slide 10: Streamlit Dashboard -->
+        <div class="slide">
+            <h1>Step 7: Data Visualization & Streamlit UI</h1>
+            
+            <h3>🎨 Dashboard Components</h3>
+            
+            <div class="step">
+                <strong>1. Main Interface</strong>
+                <div class="code">
+import streamlit as st
+
+st.title("🏥 Agentic Healthcare Assistant")
+
+# User input
+query = st.text_area("Enter your healthcare query:")
+
+if st.button("Process Query"):
+    with st.spinner("Processing..."):
+        # Execute agent workflow
+        result = agent_coordinator.process(query)
+        
+        # Display results
+        st.success("✅ Task Completed")
+        st.write(result.response)
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>2. Real-Time Metrics Dashboard</strong>
+                <div class="code">
+# Display performance metrics
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("Success Rate", f"{success_rate:.1%}")
+with col2:
+    st.metric("Avg Response Time", f"{avg_time:.2f}s")
+with col3:
+    st.metric("Queries Processed", total_queries)
+
+# Tool performance chart
+fig = px.bar(tool_metrics, x='tool', y='success_rate')
+st.plotly_chart(fig)
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>3. Patient & Appointment Views</strong>
+                <div class="code">
+# Patient records view
+st.subheader("📋 Patient Records")
+patient_df = pd.DataFrame(patients)
+st.dataframe(patient_df)
+
+# Appointment tracking
+st.subheader("📅 Upcoming Appointments")
+appointments_df = pd.DataFrame(appointments)
+st.dataframe(appointments_df)
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>4. Medical Information Display</strong>
+                <div class="code">
+# Show retrieved medical information
+st.subheader("🔍 Latest Medical Information")
+with st.expander("Treatment Options"):
+    st.write(treatment_summary)
+with st.expander("Sources"):
+    for source in sources:
+        st.write(f"- {source}")
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Memory & Logs Interface -->
+        <div class="slide">
+            <h1>Step 8: Memory and Logs Interface</h1>
+            
+            <h3>🧠 Agent Memory Traces</h3>
+            
+            <div class="step">
+                <strong>Display Planning Breakdown</strong>
+                <div class="code">
+st.subheader("🔍 Agent Planning Trace")
+
+# Show step-by-step planning
+for i, step in enumerate(plan.steps, 1):
+    with st.expander(f"Step {i}: {step.action}"):
+        st.write(f"**Tool:** {step.tool}")
+        st.write(f"**Input:** {step.input}")
+        st.write(f"**Output:** {step.output}")
+        st.write(f"**Duration:** {step.duration}s")
+        st.write(f"**Status:** {'✅ Success' if step.success else '❌ Failed'}")
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>Memory Context Viewer</strong>
+                <div class="code">
+st.subheader("💾 Retrieved Context")
+
+# Show what was retrieved from vector memory
+context_items = memory.get_recent_retrievals()
+for item in context_items:
+    st.info(f"""
+    **Query:** {item.query}
+    **Retrieved:** {item.content[:200]}...
+    **Similarity Score:** {item.score:.3f}
+    """)
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>Interactive Testing Interface</strong>
+                <div class="code">
+st.subheader("🧪 Test Different Scenarios")
+
+# Predefined test scenarios
+scenarios = {
+    "Appointment Booking": "Book a cardiologist for next week",
+    "Medical History": "Show medical records for patient John",
+    "Disease Search": "Latest treatments for diabetes",
+    "Complex Query": "My mother has hypertension, book appointment and explain diet"
+}
+
+selected = st.selectbox("Choose test scenario:", scenarios.keys())
+if st.button("Run Test"):
+    result = agent_coordinator.process(scenarios[selected])
+    st.write(result)
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>Tool Usage Logs</strong>
+                <div class="code">
+st.subheader("📊 Tool Usage Statistics")
+
+# Create usage heatmap
+tool_usage_df = pd.DataFrame(tool_logs)
+fig = px.timeline(tool_usage_df, x_start="start", x_end="end", 
+                  y="tool", color="status")
+st.plotly_chart(fig)
+
+# Success/Failure breakdown
+st.write("**Success Rate by Tool:**")
+success_df = tool_usage_df.groupby('tool')['success'].mean()
+st.bar_chart(success_df)
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Implementation Roadmap -->
+        <div class="slide" id="implementation">
+            <h1>🗺️ Implementation Roadmap</h1>
+            
+            <h3>Week-by-Week Plan</h3>
+            
+            <div class="step">
+                <strong>Week 1: Foundation Setup</strong>
+                <ul>
+                    <li>Set up project structure</li>
+                    <li>Install dependencies (LangChain, FAISS, Streamlit)</li>
+                    <li>Create sample patient database</li>
+                    <li>Initialize vector store with patient data</li>
+                </ul>
+                <div class="code">
+pip install langchain faiss-cpu streamlit pandas plotly
+pip install sentence-transformers openai
+                </div>
+            </div>
+
+            <div class="step">
+                <strong>Week 2: Build Core Agents</strong>
+                <ul>
+                    <li>Implement Planner Agent</li>
+                    <li>Create tool classes (Appointment, Records, Search)</li>
+                    <li>Set up memory system with FAISS</li>
+                    <li>Test individual agent functions</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <strong>Week 3: Agent Coordination</strong>
+                <ul>
+                    <li>Build agent coordinator/orchestrator</li>
+                    <li>Implement task chaining logic</li>
+                    <li>Add prompt engineering for each agent</li>
+                    <li>Test end-to-end workflows</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <strong>Week 4: LLMOps & Dashboard</strong>
+                <ul>
+                    <li>Implement evaluation framework</li>
+                    <li>Add logging and monitoring</li>
+                    <li>Build Streamlit dashboard</li>
+                    <li>Create visualization components</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <strong>Week 5: Testing & Refinement</strong>
+                <ul>
+                    <li>Test with multiple scenarios</li>
+                    <li>Optimize prompt templates</li>
+                    <li>Improve error handling</li>
+                    <li>Polish UI/UX</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 13: Technical Stack -->
+        <div class="slide">
+            <h1>🛠️ Technical Stack & Tools</h1>
+            
+            <h3>Core Technologies</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="step">
+                    <strong>🤖 LLM Framework</strong>
+                    <ul>
+                        <li><strong>LangChain</strong> - Agent orchestration</li>
+                        <li><strong>OpenAI GPT-4</strong> - Cloud LLM</li>
+                        <li><strong>Ollama</strong> - Local LLM option</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <strong>💾 Vector Database</strong>
+                    <ul>
+                        <li><strong>FAISS</strong> - Similarity search</li>
+                        <li><strong>Sentence Transformers</strong> - Embeddings</li>
+                        <li><strong>ChromaDB</strong> - Alternative option</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <strong>🌐 Web Framework</strong>
+                    <ul>
+                        <li><strong>Streamlit</strong> - Dashboard UI</li>
+                        <li><strong>Plotly</strong> - Interactive charts</li>
+                        <li><strong>Pandas</strong> - Data handling</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <strong>🔧 Development Tools</strong>
+                    <ul>
+                        <li><strong>Python 3.8+</strong> - Programming language</li>
+                        <li><strong>Git</strong> - Version control</li>
+                        <li><strong>Virtual Environment</strong> - Dependency isolation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>📦 Complete Requirements</h3>
+            <div class="code">
+# requirements.txt
+langchain==0.1.0
+langchain-openai==0.0.2
+faiss-cpu==1.7.4
+sentence-transformers==2.2.2
+streamlit==1.28.0
+pandas==2.0.0
+plotly==5.17.0
+python-dotenv==1.0.0
+openpyxl==3.1.2
+            </div>
+        </div>
+
+        <!-- Slide 14: Demo Scenario -->
+        <div class="slide" id="demo">
+            <h1>🎬 Complete Demo Scenario</h1>
+            
+            <h3>End-to-End Workflow Example</h3>
+            
+            <div class="code">
+User Query: "My 70-year-old father has chronic kidney disease. 
+I want to book a nephrologist for him. 
+Also, can you summarize latest treatment methods?"
+            </div>
+
+            <div class="workflow">
+                <h4>🔄 System Processing Flow</h4>
+                
+                <p><strong>1. Planner Agent Analyzes Query</strong></p>
+                <div class="code">
+Identified Tasks:
+✓ Retrieve patient context (father, 70, kidney disease)
+✓ Get medical history
+✓ Find nephrologist availability
+✓ Book appointment
+✓ Search treatment information
+                </div>
+
+                <p><strong>2. Memory System Retrieves Context</strong></p>
+                <div class="code">
+Vector Search Results:
+- Patient: Ramesh Kulkarni (65, Male)
+- Condition: Chronic Kidney Disease Stage 3
+- Current Medications: ACE inhibitors, Diuretics
+- Last Visit: 2 months ago
+                </div>
+
+                <p><strong>3. Records Agent Summarizes History</strong></p>
+                <div class="code">
+Clinical Summary:
+Patient is a 65-year-old male with Stage 3 CKD. 
+Currently managed with ACE inhibitors and dietary modifications.
+eGFR: 45 ml/min. Regular monitoring required.
+                </div>
+
+                <p><strong>4. Appointment Agent Books Slot</strong></p>
+                <div class="code">
+Available Nephrologists:
+✓ Dr. Sarah Johnson - Feb 20, 2026, 10:00 AM
+  Dr. Michael Chen - Feb 22, 2026, 2:00 PM
+
+Booking: Dr. Sarah Johnson, Feb 20, 10:00 AM
+Confirmation: APT-2026-001
+                </div>
+
+                <p><strong>5. Search Agent Retrieves Treatment Info</strong></p>
+                <div class="code">
+Medical Search Results:
+- KDIGO Guidelines 2024: ACE inhibitors first-line
+- Recent Study: SGLT2 inhibitors show benefit
+- Dietary: Protein restriction, sodium control
+- Monitoring: eGFR every 3 months
+                </div>
+
+                <p><strong>6. Final Response Synthesis</strong></p>
+                <div class="success">
+                    <strong>✅ Complete Response to User:</strong><br><br>
+                    I've successfully booked an appointment for your father with Dr. Sarah Johnson, 
+                    a nephrologist, on February 20, 2026 at 10:00 AM (Confirmation: APT-2026-001).<br><br>
+                    
+                    <strong>Patient Context:</strong> Your father (65 years old) has Stage 3 Chronic Kidney Disease 
+                    with an eGFR of 45 ml/min. He's currently on ACE inhibitors and diuretics.<br><br>
+                    
+                    <strong>Latest Treatment Approaches:</strong><br>
+                    • ACE inhibitors remain first-line therapy (KDIGO 2024)<br>
+                    • SGLT2 inhibitors showing promising results in recent studies<br>
+                    • Dietary modifications: protein and sodium restriction<br>
+                    • Regular monitoring: eGFR checks every 3 months recommended<br><br>
+                    
+                    Please bring recent lab reports to the appointment.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Best Practices -->
+        <div class="slide">
+            <h1>✅ Best Practices & Tips</h1>
+            
+            <div class="step">
+                <h3>🎯 Prompt Engineering</h3>
+                <ul>
+                    <li>Be specific about expected output format</li>
+                    <li>Include examples in prompts (few-shot learning)</li>
+                    <li>Use system messages to set agent behavior</li>
+                    <li>Test prompts iteratively and refine</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>💾 Memory Management</h3>
+                <ul>
+                    <li>Chunk patient documents appropriately (500-1000 tokens)</li>
+                    <li>Use metadata for filtering (patient_id, date, type)</li>
+                    <li>Regularly update vector store with new records</li>
+                    <li>Implement hybrid search (semantic + keyword)</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>🔧 Tool Design</h3>
+                <ul>
+                    <li>Keep tools focused on single responsibility</li>
+                    <li>Add clear docstrings for LLM understanding</li>
+                    <li>Implement error handling and retries</li>
+                    <li>Log all tool executions for debugging</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>📊 Evaluation Strategy</h3>
+                <ul>
+                    <li>Create diverse test cases covering edge cases</li>
+                    <li>Use both automated metrics and human review</li>
+                    <li>Track performance over time</li>
+                    <li>A/B test different prompt variations</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <h3>⚠️ Common Pitfalls to Avoid</h3>
+                <ul>
+                    <li><strong>Over-complicated planning:</strong> Keep plans simple and executable</li>
+                    <li><strong>Context overload:</strong> Don't pass entire database to LLM</li>
+                    <li><strong>No error handling:</strong> Always handle API failures gracefully</li>
+                    <li><strong>Ignoring latency:</strong> Optimize for response time</li>
+                    <li><strong>Poor logging:</strong> Log everything for debugging</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 16: Evaluation Criteria -->
+        <div class="slide">
+            <h1>📋 Project Evaluation Criteria</h1>
+            
+            <h3>Grading Rubric</h3>
+            
+            <div class="step">
+                <strong>Part 1: Agentic System (50 points)</strong>
+                <ul>
+                    <li><strong>Planning Agent (15 pts):</strong> Correctly decomposes queries into sub-goals</li>
+                    <li><strong>Tool Integration (15 pts):</strong> All tools functional and properly integrated</li>
+                    <li><strong>Memory System (10 pts):</strong> Vector store retrieves relevant context</li>
+                    <li><strong>Execution Flow (10 pts):</strong> End-to-end workflow completes successfully</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <strong>Part 2: LLMOps & UI (50 points)</strong>
+                <ul>
+                    <li><strong>Model Evaluation (15 pts):</strong> Implements evaluation framework with metrics</li>
+                    <li><strong>Monitoring (10 pts):</strong> Tracks tool performance and agent success rates</li>
+                    <li><strong>Streamlit Dashboard (15 pts):</strong> Functional UI with all required views</li>
+                    <li><strong>Visualization (10 pts):</strong> Clear charts and interactive elements</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>🌟 Bonus Points (10 points)</h3>
+                <ul>
+                    <li>Advanced RAG techniques (re-ranking, hybrid search)</li>
+                    <li>Multi-modal support (images, PDFs)</li>
+                    <li>Real-time collaboration features</li>
+                    <li>Deployment to cloud platform</li>
+                    <li>Comprehensive documentation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 17: Resources & Next Steps -->
+        <div class="slide">
+            <h1>📚 Resources & Next Steps</h1>
+            
+            <h3>📖 Learning Resources</h3>
+            
+            <div class="step">
+                <strong>Documentation</strong>
+                <ul>
+                    <li><a href="https://python.langchain.com/docs/get_started/introduction" target="_blank">LangChain Documentation</a></li>
+                    <li><a href="https://docs.streamlit.io/" target="_blank">Streamlit Documentation</a></li>
+                    <li><a href="https://github.com/facebookresearch/faiss/wiki" target="_blank">FAISS Wiki</a></li>
+                    <li><a href="https://www.sbert.net/" target="_blank">Sentence Transformers</a></li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <strong>Example Projects</strong>
+                <ul>
+                    <li>LangChain Agent Examples</li>
+                    <li>Healthcare AI Chatbots</li>
+                    <li>RAG Pipeline Implementations</li>
+                    <li>Multi-Agent Systems</li>
+                </ul>
+            </div>
+
+            <h3>🚀 Getting Started Checklist</h3>
+            <div class="workflow">
+                <input type="checkbox"> Clone the project repository<br>
+                <input type="checkbox"> Set up Python virtual environment<br>
+                <input type="checkbox"> Install all dependencies<br>
+                <input type="checkbox"> Get OpenAI API key or install Ollama<br>
+                <input type="checkbox"> Review sample patient data<br>
+                <input type="checkbox"> Run simple_demo.py to test setup<br>
+                <input type="checkbox"> Launch Streamlit app<br>
+                <input type="checkbox"> Test with sample queries<br>
+                <input type="checkbox"> Start building your own agents<br>
+                <input type="checkbox"> Implement evaluation framework<br>
+            </div>
+
+            <h3>💡 Project Ideas for Extension</h3>
+            <ul>
+                <li>Add medication reminder system</li>
+                <li>Implement telemedicine video integration</li>
+                <li>Create patient portal with authentication</li>
+                <li>Add multi-language support</li>
+                <li>Integrate with real EHR systems</li>
+                <li>Build mobile app interface</li>
+            </ul>
+        </div>
+
+        <!-- Slide 18: Q&A and Summary -->
+        <div class="slide">
+            <h1>🎓 Summary & Key Takeaways</h1>
+            
+            <div class="objective">
+                <h3>What You've Learned</h3>
+                <ul>
+                    <li>✅ Design and implement multi-agent AI systems</li>
+                    <li>✅ Build RAG pipelines with vector databases</li>
+                    <li>✅ Integrate LLMs with external tools and APIs</li>
+                    <li>✅ Implement LLMOps monitoring and evaluation</li>
+                    <li>✅ Create interactive dashboards with Streamlit</li>
+                    <li>✅ Apply AI to real-world healthcare scenarios</li>
+                </ul>
+            </div>
+
+            <h3>🎯 Core Concepts Mastered</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="tool-box">Agentic AI Architecture</div>
+                <div class="tool-box">Task Planning & Decomposition</div>
+                <div class="tool-box">Vector Embeddings & Search</div>
+                <div class="tool-box">Prompt Engineering</div>
+                <div class="tool-box">Tool Integration</div>
+                <div class="tool-box">Memory Management</div>
+                <div class="tool-box">Model Evaluation</div>
+                <div class="tool-box">Performance Monitoring</div>
+            </div>
+
+            <h3>🚀 Next Steps</h3>
+            <ol>
+                <li>Start with the foundation - set up your environment</li>
+                <li>Build one agent at a time - test thoroughly</li>
+                <li>Integrate agents gradually - ensure coordination works</li>
+                <li>Add evaluation early - measure what matters</li>
+                <li>Iterate based on feedback - continuous improvement</li>
+            </ol>
+
+            <div class="success">
+                <h3>✨ Remember</h3>
+                <p><strong>This is an educational project demonstrating AI capabilities.</strong></p>
+                <p>Focus on learning the concepts, experimenting with different approaches, and understanding how agentic AI systems work in practice.</p>
+                <p><em>Always include medical disclaimers and never use for actual medical diagnosis!</em></p>
+            </div>
+
+            <h3 style="text-align: center; margin-top: 40px; color: #667eea;">
+                Good luck with your capstone project! 🎉
+            </h3>
+        </div>
+
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

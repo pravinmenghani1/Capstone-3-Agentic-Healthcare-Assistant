@@ -3,6 +3,9 @@
 Agentic Healthcare Assistant - Main Application with LLM Selection
 """
 
+import os
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -159,6 +162,28 @@ class SimpleHealthcareAgent:
         self.patient_memory = PatientMemory()
         self.planner = PlannerAgent(self.llm)
         self.execution_logs = []
+        
+        # Initialize patient memory with records from Excel
+        self._initialize_patient_memory()
+    
+    def _initialize_patient_memory(self):
+        """Load patient records into vector memory"""
+        try:
+            for patient_id, patient_data in self.medical_tools.patient_records.items():
+                # Store patient context in vector memory
+                context = {
+                    "name": patient_data.get("name", ""),
+                    "age": patient_data.get("age", 0),
+                    "gender": patient_data.get("gender", ""),
+                    "conditions": patient_data.get("conditions", []),
+                    "medications": patient_data.get("medications", []),
+                    "summary": patient_data.get("summary", ""),
+                    "phone": patient_data.get("phone", ""),
+                    "address": patient_data.get("address", "")
+                }
+                self.patient_memory.store_patient_context(patient_id, context)
+        except Exception as e:
+            print(f"Error initializing patient memory: {e}")
     
     def process_query(self, user_input: str):
         """Process user query with proper workflow"""
@@ -244,16 +269,18 @@ class SimpleHealthcareAgent:
     def _handle_records(self, plan, user_input):
         """Handle medical records retrieval"""
         try:
-            # Extract patient name from user input
-            patient_id = "unknown"
-            if "ramesh" in user_input.lower():
-                patient_id = "ramesh"
-            elif "anjali" in user_input.lower():
-                patient_id = "anjali"
-            elif "david" in user_input.lower():
-                patient_id = "david"
-            elif "father" in user_input.lower():
-                patient_id = "father"
+            # First try vector memory search for better matching
+            memory_result = self.patient_memory.get_patient_context(user_input, top_k=1)
+            
+            if memory_result and memory_result.get("similarity_score", 0) > 0.3:
+                patient_id = memory_result["patient_id"]
+            else:
+                # Fallback to keyword matching
+                patient_id = "unknown"
+                for name in ["ramesh", "anjali", "david", "rahul", "rebeca"]:
+                    if name in user_input.lower():
+                        patient_id = name
+                        break
             
             patient_data = self.medical_tools.get_patient_history(patient_id)
             
@@ -261,7 +288,8 @@ class SimpleHealthcareAgent:
                 return {
                     "status": "success", 
                     "patient_data": patient_data,
-                    "patient_id": patient_id
+                    "patient_id": patient_id,
+                    "similarity_score": memory_result.get("similarity_score", 0) if memory_result else 0
                 }
             else:
                 return {"status": "not_found", "patient_id": patient_id}
@@ -518,7 +546,33 @@ def render_patient_records():
     
     agent = st.session_state.agent
     
-    # Patient selection
+    # Display all patients overview
+    st.subheader("All Patients")
+    
+    if agent.medical_tools.patient_records:
+        # Create DataFrame for all patients
+        patients_list = []
+        for patient_id, data in agent.medical_tools.patient_records.items():
+            patients_list.append({
+                "ID": patient_id,
+                "Name": data.get("name", "Unknown"),
+                "Age": data.get("age", "N/A"),
+                "Gender": data.get("gender", "N/A"),
+                "Conditions": ", ".join(data.get("conditions", [])) if data.get("conditions") else "None",
+                "Phone": data.get("phone", "N/A")
+            })
+        
+        df = pd.DataFrame(patients_list)
+        st.dataframe(df, use_container_width=True)
+        
+        st.markdown(f"**Total Patients:** {len(patients_list)}")
+    else:
+        st.warning("No patient records found")
+    
+    st.divider()
+    
+    # Patient selection for detailed view
+    st.subheader("Patient Details")
     patient_ids = list(agent.medical_tools.patient_records.keys())
     selected_patient = st.selectbox("Select Patient:", [""] + patient_ids)
     
@@ -534,16 +588,45 @@ def render_patient_records():
             with col3:
                 st.metric("Gender", patient_data.get('gender', 'Unknown'))
             
+            # Contact Information
+            st.subheader("📞 Contact Information")
+            st.write(f"**Phone:** {patient_data.get('phone', 'N/A')}")
+            st.write(f"**Address:** {patient_data.get('address', 'N/A')}")
+            
+            # Medical Information
             col1, col2 = st.columns(2)
             with col1:
-                st.subheader("Conditions")
-                for condition in patient_data.get('conditions', []):
-                    st.write(f"• {condition}")
+                st.subheader("🏥 Conditions")
+                conditions = patient_data.get('conditions', [])
+                if conditions:
+                    for condition in conditions:
+                        if condition.strip():
+                            st.write(f"• {condition}")
+                else:
+                    st.info("No conditions recorded")
             
             with col2:
-                st.subheader("Medications")
-                for medication in patient_data.get('medications', []):
-                    st.write(f"• {medication}")
+                st.subheader("💊 Medications")
+                medications = patient_data.get('medications', [])
+                if medications:
+                    for medication in medications:
+                        if medication.strip():
+                            st.write(f"• {medication}")
+                else:
+                    st.info("No medications recorded")
+            
+            # Clinical Summary
+            if patient_data.get('summary') and patient_data['summary'] != 'nan':
+                st.subheader("📝 Clinical Summary")
+                st.info(patient_data['summary'])
+            
+            # PDF Report if available
+            if patient_data.get('pdf_report'):
+                st.subheader("📄 Medical Report")
+                with st.expander("View Report Content"):
+                    st.text(patient_data['pdf_report']['content'][:1000] + "...")
+    else:
+        st.info("Select a patient to view detailed information")
 
 def render_appointments():
     """Appointments interface"""
@@ -555,8 +638,9 @@ def render_appointments():
     appointments = list(agent.appointment_tools.appointments.values())
     
     if appointments:
+        st.subheader("Booked Appointments")
         df = pd.DataFrame(appointments)
-        st.dataframe(df[['appointment_id', 'patient_id', 'doctor_name', 'specialty', 'appointment_time']])
+        st.dataframe(df[['appointment_id', 'patient_id', 'doctor_name', 'specialty', 'appointment_time']], use_container_width=True)
         
         # Appointments by specialty chart
         specialty_counts = df['specialty'].value_counts()
@@ -564,7 +648,60 @@ def render_appointments():
                     title="Appointments by Specialty")
         st.plotly_chart(fig)
     else:
-        st.info("No appointments found")
+        st.info("No appointments booked yet")
+    
+    st.divider()
+    
+    # Book new appointment
+    st.subheader("📝 Book New Appointment")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        patient_ids = list(agent.medical_tools.patient_records.keys())
+        selected_patient = st.selectbox("Select Patient:", patient_ids, key="apt_patient")
+    
+    with col2:
+        specialties = list(agent.appointment_tools.doctors.keys())
+        selected_specialty = st.selectbox("Select Specialty:", specialties, key="apt_specialty")
+    
+    if st.button("Find Available Slots", type="primary"):
+        st.session_state.available_slots = agent.appointment_tools.get_available_slots(selected_specialty)
+        st.session_state.booking_patient = selected_patient
+        st.session_state.booking_specialty = selected_specialty
+    
+    # Display available slots if they exist
+    if 'available_slots' in st.session_state and st.session_state.available_slots:
+        slots = st.session_state.available_slots
+        st.success(f"Found {len(slots)} available slots")
+        
+        # Display slots in a table format
+        for i, slot in enumerate(slots[:5]):  # Show first 5
+            with st.container():
+                col1, col2, col3, col4 = st.columns([2, 2, 2, 1])
+                with col1:
+                    st.write(f"**{slot['doctor_name']}**")
+                with col2:
+                    st.write(slot['date'])
+                with col3:
+                    st.write(slot['time_str'])
+                with col4:
+                    if st.button("Book", key=f"book_slot_{i}"):
+                        result = agent.appointment_tools.book_appointment(
+                            patient_id=st.session_state.booking_patient,
+                            doctor_id=slot['doctor_id'],
+                            slot_time=slot['time'],
+                            specialty=st.session_state.booking_specialty
+                        )
+                        if result['success']:
+                            st.success(f"✅ {result['message']}")
+                            # Clear slots after booking
+                            del st.session_state.available_slots
+                            st.rerun()
+                        else:
+                            st.error(f"❌ {result['message']}")
+    elif 'available_slots' in st.session_state and not st.session_state.available_slots:
+        st.warning("No available slots found for this specialty")
 
 def render_medical_search():
     """Medical search interface"""
