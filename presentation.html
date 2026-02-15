@@ -14,7 +14,7 @@
         h3 { color: #667eea; font-size: 1.5em; margin: 20px 0 10px 0; }
         .objective { background: #f0f4ff; padding: 20px; border-left: 5px solid #667eea; margin: 20px 0; border-radius: 5px; }
         .step { background: #fff9e6; padding: 15px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #ffc107; }
-        .code { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: 'Courier New', monospace; margin: 10px 0; }
+        .code { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: 'Courier New', monospace; margin: 10px 0; white-space: pre-wrap; word-wrap: break-word; }
         .workflow { background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 15px 0; }
         .tool-box { display: inline-block; background: #667eea; color: white; padding: 8px 15px; margin: 5px; border-radius: 20px; font-size: 0.9em; }
         .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 5px; }
@@ -155,8 +155,7 @@ Also, can you summarize latest treatment methods?"
             <h3>Implementation Approach</h3>
             <ol>
                 <li><strong>Parse User Intent</strong>
-                    <div class="code">
-# Use LLM to understand the query
+                    <div class="code"># Use LLM to understand the query
 prompt = """
 Analyze this healthcare query and identify:
 1. Patient information needed
@@ -164,8 +163,7 @@ Analyze this healthcare query and identify:
 3. Required tools for each action
 
 Query: {user_query}
-"""
-                    </div>
+"""</div>
                 </li>
                 
                 <li><strong>Decompose into Sub-Goals</strong>
@@ -181,13 +179,11 @@ Query: {user_query}
                 </li>
 
                 <li><strong>Map Tools to Goals</strong>
-                    <div class="code">
-tools_mapping = {
+                    <div class="code">tools_mapping = {
     "retrieve_history": MedicalRecordsTool,
     "book_appointment": AppointmentTool,
     "search_info": MedicalSearchTool
-}
-                    </div>
+}</div>
                 </li>
             </ol>
 
